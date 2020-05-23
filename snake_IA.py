@@ -40,16 +40,10 @@ class snake:
         self.position=[[10,10]]
         for i in range(0,Lenght-1):
             self.position.append([9-i,10])
-        
-        
-        
-        
-        
-    #position = [[10,10],[9,10],[8,10],[7,10]] #TODO
    
     def move_down(self):
         
-        prev_position=self.position[0]
+        prev_position=(self.position[0]).copy()
         
         i=0
         for x in self.position:
@@ -62,10 +56,48 @@ class snake:
             i+=1
             
             
-
+    def move_up(self):
+        
+        prev_position=(self.position[0]).copy()
+        
+        i=0
+        for x in self.position:
+            if i==0:
+                self.position[i][0]-=1
+            else:
+                buff=self.position[i]
+                self.position[i]=prev_position
+                prev_position=buff
+            i+=1
    
 
+    def move_right(self):
+        
+        prev_position=(self.position[0]).copy()
+        
+        i=0
+        for x in self.position:
+            if i==0:
+                self.position[i][1]+=1
+            else:
+                buff=self.position[i]
+                self.position[i]=prev_position
+                prev_position=buff
+            i+=1
     
+    def move_left(self):
+        
+        prev_position=(self.position[0]).copy()
+        
+        i=0
+        for x in self.position:
+            if i==0:
+                self.position[i][1]-=1
+            else:
+                buff=self.position[i]
+                self.position[i]=prev_position
+                prev_position=buff
+            i+=1
     
     
     
@@ -83,6 +115,11 @@ griglia.Print()
 print("\n\n\n")
 
 
+
+snake.move_left()
+snake.move_left()
+snake.move_left()
+snake.move_left()
 snake.move_down()
 griglia.import_snake(Snake=snake)
 
