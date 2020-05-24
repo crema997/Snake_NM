@@ -4,6 +4,10 @@ Spyder Editor
 
 This is a temporary script file.
 """
+
+#import tkinter as tk
+
+
 #griglia 40*40
 #lunghezza iniziale serpente 4
 #posizione iniziale serpente 20,20
