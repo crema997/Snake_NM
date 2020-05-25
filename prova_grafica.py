@@ -49,7 +49,7 @@ c.itemconfig(squares[0][20],fill="white")
 
 def keypress(event):
 	x, y = 0, 0
-	if event.char == "a": x = -10; 
+	if event.char == "a": x = -10 
 	elif event.char == "d": x = 10
 	elif event.char == "w": y = -10
 	elif event.char == "s": y = 10
