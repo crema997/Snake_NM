@@ -4,14 +4,19 @@ Created on Mon May 25 15:13:57 2020
 
 @author: User
 """
-
+from numpy.random import randint
+from snake import snake
+from food import food
 #import tkinter as tk
 #0 vuota, 1 serpente, 2 cibo
+
 class grid:
-    def __init__(self, _rows=40, _column=40): 
+    def __init__(self, _rows=40, _column=40,snake_len=4): 
         self.grid = [[0]*_column for _ in [0]*_rows]
         self.rows = _rows
         self.column = _column
+        self.snake=snake(Lenght=snake_len)
+        self.food=food(_y=self.rows+1, _x=self.column+1)
         
     def Print(self):
        for x in self.grid:
@@ -21,7 +26,7 @@ class grid:
 
 
     def import_snake(self, Snake):
-        
+        self.snake=Snake
         for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
                 if y==1:
@@ -38,3 +43,93 @@ class grid:
                     canvas.itemconfig(squares[j][i],fill="black")
                 if y==1:
                     canvas.itemconfig(squares[j][i],fill="white")
+                if y==2:
+                    canvas.itemconfig(squares[j][i],fill="red")
+                    
+                    
+    def import_food(self, food): #TODO
+        if self.grid[food.x][food.y]==1:
+            food.set_position(randint(0, self.column, 2))
+            self.import_food(food)
+        else:
+            self.food=food
+            self.grid[food.x][food.y]=2
+    
+    def update_grid (self):
+        
+        
+        
+        
+        
+        for i, x in enumerate(self.grid):
+            for j, y in enumerate(x):
+                if y==1:
+                    self.grid[i][j]=0
+                    
+        for x in self.snake.position:
+            self.grid[x[0]][x[1]]=1
+            
+            
+            
+            
+            
+            
+        while self.grid[self.food.x][self.food.y]==1:
+            self.food.set_position(randint(0, self.column, 2))
+        
+        self.grid[self.food.x][self.food.y]=2    
+            
+     
+            
+     
+        
+     
+        
+     
+        
+     
+        
+     
+        
+            
+    def eat(self):
+        if self.food.x == self.snake.position[0][0] and self.food.y == self.snake.position[0][1]:
+            self.snake.lenght+=1
+            self.snake.position.append(self.snake.last_pos)
+            self.food.set_position(randint(0, self.column, 2))
+            
+    def move_up(self):
+        self.snake.move_up()
+        self.eat()
+        self.update_grid()
+
+        
+    def move_down(self):
+        self.snake.move_down()
+        self.eat()
+        self.update_grid()
+
+        
+    def move_left(self):
+        self.snake.move_left()
+        self.eat()
+        self.update_grid()
+
+        
+    def move_right(self):
+        self.snake.move_right()
+        self.eat()
+        self.update_grid()
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            

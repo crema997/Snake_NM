@@ -8,6 +8,7 @@ This is a temporary script file.
 #import tkinter as tk
 from grid import grid
 from snake import snake
+from food import food
 import tkinter as tk
 from tkinter import Canvas
 
@@ -27,30 +28,31 @@ window.configure(background="black")
 c=Canvas(window,height=839,width=839,bg="black")
 c.pack()      
         
-squares =[[c.create_rectangle(0,0,20,20,fill="white")]*griglia.column for _ in [c.create_rectangle(0,0,20,20,fill="white")]*griglia.rows]
+squares =[[c.create_rectangle(0,0,20,20,fill="black")]*griglia.column for _ in [c.create_rectangle(0,0,20,20,fill="black")]*griglia.rows]
 
 for i, x in enumerate(squares):
     for j, y in enumerate(x):
         squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="black")
         
     
- 
-
-
+cibo=food(rows=griglia.rows, column=griglia.column)
+print (cibo.x)
+print (cibo.y)
+griglia.import_food(food=cibo)
 griglia.import_snake(Snake=snake)
 griglia.draw(c, squares)
 
-def keypress(event,snake, griglia, c ,squares):
+def keypress(event, griglia, c ,squares):
     
-    if event.char == "a": snake.move_left()
-    elif event.char == "d": snake.move_right()
-    elif event.char == "w": snake.move_up()
-    elif event.char == "s": snake.move_down()
+    if event.char == "a": griglia.move_left()
+    elif event.char == "d": griglia.move_right()
+    elif event.char == "w": griglia.move_up()
+    elif event.char == "s": griglia.move_down()
     
-    griglia.import_snake(Snake=snake)   
+
     griglia.draw(c, squares)
 
-window.bind("<Key>", lambda event: keypress(event, snake, griglia, c, squares))
+window.bind("<Key>", lambda event: keypress(event, griglia, c, squares))
            
 if __name__=="__main__":
     window.mainloop()
@@ -60,7 +62,6 @@ if __name__=="__main__":
 #print("\n\n\n")
 
 #griglia.import_snake(Snake=snake)
-
 #print("con serpente\n")
 #griglia.Print()
 #print("\n\n\n")

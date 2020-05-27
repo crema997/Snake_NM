@@ -10,14 +10,16 @@ import tkinter as tk
 from tkinter import Canvas
 
 window=tk.Tk()
-window.geometry("839x839")
+window.geometry("900x839")
 window.title("prova")
 window.resizable(False,False)
-window.configure(background="black")
+window.configure(background="white")
 
 c=Canvas(window,height=839,width=839,bg="black")
-c.pack()
-
+c1=Canvas(window,height=839,width=61,bg="red")
+c.pack(anchor=tk.W)
+#c.pack()
+c1.pack(anchor=tk.NE)
 #canvas.create_rectangle(x1, y1, x2, y2, **kwargs), 
 #with (x1,y1) the coordinates of the top left corner and (x2, y2) those of the bottom right corner
 
@@ -28,15 +30,15 @@ c.pack()
 #r4=c.create_rectangle(0,60,20,20,fill="green")
 #r5=c.create_rectangle(60,0,20,20,fill="white")
 
-squares =[[c.create_rectangle(0,0,20,20,fill="white")]*40 for _ in [c.create_rectangle(0,0,20,20,fill="white")]*40]
+#squares =[[c.create_rectangle(0,0,20,20,fill="white")]*40 for _ in [c.create_rectangle(0,0,20,20,fill="white")]*40]
 
-for i, x in enumerate(squares):
-    for j, y in enumerate(x):
-        squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="black")
+#for i, x in enumerate(squares):
+ #   for j, y in enumerate(x):
+  #      squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="black")
 
 
 
-c.itemconfig(squares[0][20],fill="white")
+#c.itemconfig(squares[0][20],fill="white")
 
 
 
@@ -55,10 +57,14 @@ def keypress(event):
 	elif event.char == "s": y = 10
 	#c.move(squares[0][0], x, y)
 
-window.bind("<Key>", keypress)
+#window.bind("<Key>", keypress)
 
 #first_button=tk.Button(text="Saluta!")
 #first_button.grid(row=0,column=0)
 
 if __name__=="__main__":
     window.mainloop()
+    
+    
+    
+#window.destroy()

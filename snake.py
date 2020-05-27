@@ -10,12 +10,14 @@ class snake:
     def __init__(self, Lenght=4):    
         self.lenght=Lenght
         self.position=[[10,10]]
+        self.last_pos=[-1,-1] #indiates the last position of the tail
         for i in range(0,Lenght-1):
             self.position.append([9-i,10])
    
     def move_down(self):
         
         prev_position=(self.position[0]).copy()
+        self.last_pos=self.position[self.lenght-1]
         
         i=0
         for x in self.position:
@@ -31,6 +33,7 @@ class snake:
     def move_up(self):
         
         prev_position=(self.position[0]).copy()
+        self.last_pos=self.position[self.lenght-1]
         
         i=0
         for x in self.position:
@@ -46,6 +49,7 @@ class snake:
     def move_right(self):
         
         prev_position=(self.position[0]).copy()
+        self.last_pos=self.position[self.lenght-1]
         
         i=0
         for x in self.position:
@@ -60,6 +64,7 @@ class snake:
     def move_left(self):
         
         prev_position=(self.position[0]).copy()
+        self.last_pos=self.position[self.lenght-1]
         
         i=0
         for x in self.position:
