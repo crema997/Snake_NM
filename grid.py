@@ -17,6 +17,7 @@ class grid:
         self.column = _column
         self.snake=snake(Lenght=snake_len)
         self.food=food(_y=self.rows+1, _x=self.column+1)
+        self.status=True
         
     def Print(self):
        for x in self.grid:
@@ -57,22 +58,13 @@ class grid:
     
     def update_grid (self):
         
-        
-        
-        
-        
         for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
                 if y==1:
                     self.grid[i][j]=0
                     
         for x in self.snake.position:
-            self.grid[x[0]][x[1]]=1
-            
-            
-            
-            
-            
+            self.grid[x[0]][x[1]]=1            
             
         while self.grid[self.food.x][self.food.y]==1:
             self.food.set_position(randint(0, self.column, 2))
@@ -83,10 +75,13 @@ class grid:
             
      
         
+    def collision(self):
+        if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows:
+            self.status=False
      
-        
-     
-        
+        for a in self.snake.position[1:]:
+            if a==self.snake.position[0]:
+                self.status=False
      
         
      
@@ -100,26 +95,29 @@ class grid:
             
     def move_up(self):
         self.snake.move_up()
+        self.collision()
         self.eat()
-        self.update_grid()
+        
 
         
     def move_down(self):
         self.snake.move_down()
+        self.collision()
         self.eat()
-        self.update_grid()
-
+        
         
     def move_left(self):
         self.snake.move_left()
+        self.collision()
         self.eat()
-        self.update_grid()
+        
 
         
     def move_right(self):
         self.snake.move_right()
+        self.collision()
         self.eat()
-        self.update_grid()
+        
 
             
             

@@ -42,17 +42,21 @@ griglia.import_food(food=cibo)
 griglia.import_snake(Snake=snake)
 griglia.draw(c, squares)
 
-def keypress(event, griglia, c ,squares):
+def keypress(event, griglia, c ,squares,window):
     
     if event.char == "a": griglia.move_left()
     elif event.char == "d": griglia.move_right()
     elif event.char == "w": griglia.move_up()
     elif event.char == "s": griglia.move_down()
     
+    if griglia.status==False:
+        window.destroy()
+       
+    else:
+        griglia.update_grid()
+        griglia.draw(c, squares)
 
-    griglia.draw(c, squares)
-
-window.bind("<Key>", lambda event: keypress(event, griglia, c, squares))
+window.bind("<Key>", lambda event: keypress(event, griglia, c, squares,window))
            
 if __name__=="__main__":
     window.mainloop()
