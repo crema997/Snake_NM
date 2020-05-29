@@ -70,8 +70,6 @@ if __name__=="__main__":
 #griglia.Print()
 #print("\n\n\n")
 
-
-
 #snake.move_left()
 #snake.move_left()
 #snake.move_left()

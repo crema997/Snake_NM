@@ -18,6 +18,8 @@ class grid:
         self.snake=snake(Lenght=snake_len)
         self.food=food(_y=self.rows+1, _x=self.column+1)
         self.status=True
+        self.points=0
+        self.moves_left=200
         
     def Print(self):
        for x in self.grid:
@@ -90,33 +92,55 @@ class grid:
     def eat(self):
         if self.food.x == self.snake.position[0][0] and self.food.y == self.snake.position[0][1]:
             self.snake.lenght+=1
+            self.points+=1
+            self.moves_left+=100
             self.snake.position.append(self.snake.last_pos)
             self.food.set_position(randint(0, self.column, 2))
             
     def move_up(self):
-        self.snake.move_up()
-        self.collision()
-        self.eat()
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_up()
+            self.moves_left-=1
+            print(self.moves_left)
+            self.collision()
+            self.eat()
         
 
         
     def move_down(self):
-        self.snake.move_down()
-        self.collision()
-        self.eat()
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_down()
+            self.moves_left-=1
+            print(self.moves_left)
+            self.collision()
+            self.eat()
         
         
     def move_left(self):
-        self.snake.move_left()
-        self.collision()
-        self.eat()
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_left()
+            self.moves_left-=1
+            print(self.moves_left)
+            self.collision()
+            self.eat()
         
 
         
     def move_right(self):
-        self.snake.move_right()
-        self.collision()
-        self.eat()
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_right()
+            self.moves_left-=1
+            print(self.moves_left)
+            self.collision()
+            self.eat()
         
 
             
