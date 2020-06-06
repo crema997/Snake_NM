@@ -6,7 +6,7 @@ Created on Mon May 25 15:14:20 2020
 """
 
 
-class snake:
+class snake(object):
     def __init__(self, Lenght=4):    
         self.lenght=Lenght
         self.position=[[10,10]]

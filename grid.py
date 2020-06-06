@@ -10,7 +10,7 @@ from food import food
 #import tkinter as tk
 #0 vuota, 1 serpente, 2 cibo
 
-class grid:
+class grid(object):
     def __init__(self, _rows=40, _column=40,snake_len=4): 
         self.grid = [[0]*_column for _ in [0]*_rows]
         self.rows = _rows
@@ -140,14 +140,14 @@ class grid:
             self.moves_left-=1
             print(self.moves_left)
             self.collision()
-            self.eat()
-        
-
+            self.eat()    
+  
             
+    def get_points(self):
+        return self.points            
             
-            
-            
-            
+    def set_points(self, points):
+        self.points = points
             
             
             

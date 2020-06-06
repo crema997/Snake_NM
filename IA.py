@@ -4,7 +4,7 @@ Created on Fri May 29 15:00:02 2020
 
 @author: User
 """
-#from grid import grid
+from grid import grid
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -16,9 +16,11 @@ from keras.layers import Dense, Conv2D, Flatten
 #8 hidden or 16 hidden
 #4 final
 
-class IA:
+class IA(object):
+    
     def __init__(self):
-        #self.grid=Grid
+        self.Grid=grid()
+        
         #create model
         self.model = Sequential()
         #add model layers
@@ -100,3 +102,16 @@ class IA:
         self.model.set_weights(array)
         
 
+    def get_points(self):
+        return self.Grid.get_points()
+
+    def set_points(self, points):
+         self.Grid.set_points(points)
+         
+         
+def get_point(Ia):
+    return Ia.get_points()
+
+def order_IA(ia):
+    ia.sort(key=get_point, reverse=True)
+    return ia

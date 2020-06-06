@@ -7,7 +7,7 @@ Created on Wed May 27 09:55:09 2020
 
 from numpy.random import randint
 
-class food:
+class food(object):
     def __init__(self,rows=-1,column=-1,_x=0,_y=0):
         if rows != -1 and column !=-1:
             self.x=randint(0,rows,1)[0]
