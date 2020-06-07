@@ -12,6 +12,8 @@ from keras.layers import Dense, Conv2D, Flatten
 
 from IA import IA
 from IA import order_IA
+from IA import recombination_1
+from IA import recombination_2
 
 def test_get_and_set_weights():
     Ia=IA()
@@ -58,37 +60,45 @@ def test_ordering():
     print("dopo aver ordinato,  ordine aspettato: 7 5 3 ")
     for x in ia:
         print(x.get_points())
+#test recombination_1
+def test_reco_1():
+    a=[0,1,2,3,4,5,6,7,8,9]
+    b=[9,8,7,6,5,4,3,2,1,0]
+    cut=3
+    c=recombination_1(a,b,cut)
+    result_1=[9,8,7,3,4,5,6,7,8,9]
+    result_2=[0,1,2,6,5,4,3,2,1,0]
+    for x in c:
+        for y in x:
+            print(y, end=" ")
+        print("\n")
+        
+        
+    c0_1=(c[0]==result_1)
+    c1_2=(c[1]==result_2)
+    print ("c[0] equals result 1? expected: True obtained",end=" ")
+    print(c0_1)
+    print ("c[1] equals result 2? expected: True obtained",end=" ")
+    print(c1_2)    
+
+
+#test recombination_2
+def test_reco_2():
+    a=[0,1,2,3,4,5,6,7,8,9]
+    b=[9,8,7,6,5,4,3,2,1,0]
+    arr=[a,b]    
+    c=recombination_2(arr)
+    for i in c:
+        print(i)
+        pippo=0
   
 
-  
 
 #%%
-def get_point(Ia):
-    return Ia.get_points()
+#spazio di prova per test routine
 
-ia=[IA()]*3
-
-Ia1=IA()
-Ia2=IA()
-Ia3=IA()
-
-Ia1.set_points(5)
-Ia2.set_points(3)
-Ia3.set_points(7)
-
-ia[0]=Ia1
-ia[1]=Ia2
-ia[2]=Ia3
-
-for x in ia:
-    print(x.get_points())
-
-ia.sort(key=get_point)
-
-for x in ia:
-    print(x.get_points())
-#%%
-
+    
+    
 
 #%%
 #test non importanti

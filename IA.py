@@ -4,6 +4,7 @@ Created on Fri May 29 15:00:02 2020
 
 @author: User
 """
+from numpy.random import randint
 from grid import grid
 import numpy as np
 import tensorflow as tf
@@ -108,6 +109,8 @@ class IA(object):
     def set_points(self, points):
          self.Grid.set_points(points)
          
+    
+         
          
 def get_point(Ia):
     return Ia.get_points()
@@ -115,3 +118,58 @@ def get_point(Ia):
 def order_IA(ia):
     ia.sort(key=get_point, reverse=True)
     return ia
+
+def recombination_1(array_1, array_2, cut):
+    a1=array_1.copy()
+    a2=array_2.copy()
+    for i in range(cut):
+        a1[i]=array_2[i]
+        a2[i]=array_1[i]
+    result=[a1,a2]
+    return result
+    
+def recombination_2(weights):
+    result = []
+    pos = randint(0, len(weights),len(weights[0]))
+    k=0
+    
+    for i, x in enumerate(pos):
+        #print(weights[x][i])
+        result.append(weights[x][i])
+        k+=1
+        
+    return result
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
