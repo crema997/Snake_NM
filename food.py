@@ -25,3 +25,6 @@ class food(object):
     def set_position(self, pos):
         self.x=pos[0]
         self.y=pos[1]
+        
+    def get_position(self):
+        return [self.x,self.y]

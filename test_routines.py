@@ -9,11 +9,12 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
-
+from random import seed
 from IA import IA
 from IA import order_IA
 from IA import recombination_1
 from IA import recombination_2
+from IA import mutation
 
 def test_get_and_set_weights():
     Ia=IA()
@@ -90,16 +91,20 @@ def test_reco_2():
     c=recombination_2(arr)
     for i in c:
         print(i)
-        pippo=0
   
+def test_mutation():
+    a=[0.,1.,2.,3.,4.,5.,6.,7.,8.,9.]
+    b=mutation(a, mutation_prob=0.1)
+    print(a)
+    print(b)
 
 
 #%%
 #spazio di prova per test routine
-
-    
-    
-
+seed()
+ia=IA()
+print(ia.calculate_distances())
+ia.draw()
 #%%
 #test non importanti
 

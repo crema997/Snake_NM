@@ -16,7 +16,7 @@ class grid(object):
         self.rows = _rows
         self.column = _column
         self.snake=snake(Lenght=snake_len)
-        self.food=food(_y=self.rows+1, _x=self.column+1)
+        self.food=food(rows=self.rows, column=self.column)
         self.status=True
         self.points=0
         self.moves_left=200
@@ -33,30 +33,30 @@ class grid(object):
         for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
                 if y==1:
-                    self.grid[i][j]=0
+                    self.grid[j][i]=0
                     
         for x in Snake.position:
-            self.grid[x[0]][x[1]]=1
+            self.grid[x[1]][x[0]]=1
 
 
     def draw (self, canvas, squares):
          for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
-                if "white"== canvas.itemcget(squares[j][i], "fill"):
-                    canvas.itemconfig(squares[j][i],fill="black")
+                if "white"== canvas.itemcget(squares[i][j], "fill"):
+                    canvas.itemconfig(squares[i][j],fill="black")
                 if y==1:
-                    canvas.itemconfig(squares[j][i],fill="white")
+                    canvas.itemconfig(squares[i][j],fill="white") 
                 if y==2:
-                    canvas.itemconfig(squares[j][i],fill="red")
+                    canvas.itemconfig(squares[i][j],fill="red")
                     
                     
-    def import_food(self, food): #TODO
-        if self.grid[food.x][food.y]==1:
+    def import_food(self, food):
+        if self.grid[food.y][food.x]==1:
             food.set_position(randint(0, self.column, 2))
             self.import_food(food)
         else:
             self.food=food
-            self.grid[food.x][food.y]=2
+            self.grid[food.y][food.x]=2
     
     def update_grid (self):
         
@@ -66,12 +66,12 @@ class grid(object):
                     self.grid[i][j]=0
                     
         for x in self.snake.position:
-            self.grid[x[0]][x[1]]=1            
+            self.grid[x[1]][x[0]]=1            
             
-        while self.grid[self.food.x][self.food.y]==1:
+        while self.grid[self.food.y][self.food.x]==1:
             self.food.set_position(randint(0, self.column, 2))
         
-        self.grid[self.food.x][self.food.y]=2    
+        self.grid[self.food.y][self.food.x]=2    
             
      
             
@@ -97,7 +97,7 @@ class grid(object):
             self.snake.position.append(self.snake.last_pos)
             self.food.set_position(randint(0, self.column, 2))
             
-    def move_up(self):
+    def move_up(self):#ok
         if self.moves_left<=0:
             self.status=False
         else:
@@ -109,7 +109,7 @@ class grid(object):
         
 
         
-    def move_down(self):
+    def move_down(self):#ok
         if self.moves_left<=0:
             self.status=False
         else:

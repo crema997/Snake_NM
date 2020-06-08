@@ -14,7 +14,7 @@ class snake(object):
         for i in range(0,Lenght-1):
             self.position.append([9-i,10])
    
-    def move_down(self):
+    def move_down(self):#ok
         
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]
@@ -30,7 +30,7 @@ class snake(object):
             i+=1
             
             
-    def move_up(self):
+    def move_up(self):#ok
         
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]

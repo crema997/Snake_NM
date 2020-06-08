@@ -32,12 +32,13 @@ squares =[[c.create_rectangle(0,0,20,20,fill="black")]*griglia.column for _ in [
 
 for i, x in enumerate(squares):
     for j, y in enumerate(x):
-        squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="black")
+        squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="white")
         
     
 cibo=food(rows=griglia.rows, column=griglia.column)
 print (cibo.x)
 print (cibo.y)
+print (snake.position[0])
 griglia.import_food(food=cibo)
 griglia.import_snake(Snake=snake)
 griglia.draw(c, squares)

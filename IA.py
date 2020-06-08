@@ -5,7 +5,11 @@ Created on Fri May 29 15:00:02 2020
 @author: User
 """
 from numpy.random import randint
+from random import random
+from random import gauss
 from grid import grid
+import tkinter as tk
+from tkinter import Canvas
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -17,11 +21,16 @@ from keras.layers import Dense, Conv2D, Flatten
 #8 hidden or 16 hidden
 #4 final
 
-class IA(object):
+
+
+
+
+
+
+class IA:
     
     def __init__(self):
         self.Grid=grid()
-        
         #create model
         self.model = Sequential()
         #add model layers
@@ -108,9 +117,95 @@ class IA(object):
 
     def set_points(self, points):
          self.Grid.set_points(points)
-         
     
-         
+    def check_direction(self, versor): #TODO
+        boolean = True
+        body_found= False
+        i=1
+        distance_body=50
+        distance_wall=50
+        while boolean:
+            pos=[x + i*y for x, y in zip(self.Grid.snake.position[0], versor)]
+            if pos[0]<0 or pos[0]>39 or pos[1]<0 or pos[1]>39:
+                distance_wall = i-1
+                boolean=False
+            else:
+                if self.Grid.grid [pos[0]] [pos[1]] == 1:
+                    if (not body_found):
+                        distance_body = i 
+                        body_found=True
+            i+=1
+        return distance_body, distance_wall
+                
+                
+                
+    def calculate_distances(self): #TODO
+        """calculate the distance(in x and y) between the head of the snake an the food. 
+           Also looks in 8 directions to check if there is a part of the body of the snake or a wall"""
+        self.Grid.update_grid()
+        distances=[]
+        x_dist=self.Grid.food.x-self.Grid.snake.position[0][0]
+        y_dist=self.Grid.food.y-self.Grid.snake.position[0][1]
+        distances.append(x_dist)
+        distances.append(y_dist)
+        
+        #versor (1,0)
+        distances.append(self.check_direction([1,0]))
+        #versor (1,1)
+        distances.append(self.check_direction([1,1]))
+        #versor (0,1)
+        distances.append(self.check_direction([0,1]))
+        #versor (-1,1)
+        distances.append(self.check_direction([-1,1]))
+        #versor (-1,0)
+        distances.append(self.check_direction([-1,0]))
+        #versor (-1,-1)
+        distances.append(self.check_direction([-1,-1]))
+        #versor (0,-1)
+        distances.append(self.check_direction([0,-1]))
+        #versor (1,-1)
+        distances.append(self.check_direction([1,-1]))
+        return distances
+    
+    def draw(self):
+        window=tk.Tk()
+        window.geometry("839x839")
+        window.title("prova")
+        window.resizable(False,False)
+        window.configure(background="black")
+
+        c=Canvas(window,height=839,width=839,bg="black")
+        c.pack()
+    
+        self.Grid.update_grid()
+    
+        squares =[[c.create_rectangle(0,0,20,20,fill="black")]*self.Grid.column for _ in [c.create_rectangle(0,0,20,20,fill="black")]*self.Grid.rows]
+        for i, x in enumerate(squares):
+            for j, y in enumerate(x):
+                squares[i][j]=c.create_rectangle(0+21*i,0+21*j,20+21*i,20+21*j,fill="white")
+        
+        print (self.Grid.food.x)
+        print (self.Grid.food.y)
+        print (self.Grid.snake.position[0])
+        self.Grid.draw(c, squares)
+        
+        def keypress(event, ia, c ,squares,window):
+            ia.Grid
+            if event.char == "a": ia.Grid.move_left()
+            elif event.char == "d": ia.Grid.move_right()
+            elif event.char == "w": ia.Grid.move_up()
+            elif event.char == "s": ia.Grid.move_down()
+    
+            if ia.Grid.status==False:
+                window.destroy()
+       
+            else:
+                ia.Grid.update_grid()
+                ia.Grid.draw(c, squares)
+                
+        window.bind("<Key>", lambda event: keypress(event, self, c, squares,window))
+        window.mainloop()
+
          
 def get_point(Ia):
     return Ia.get_points()
@@ -140,9 +235,15 @@ def recombination_2(weights):
         
     return result
     
+def mutation(weights, mutation_prob=0.01):
+    """generate a mutation with a probability of 1% and a mutation that is gaussian with mean 0 and sigma 1"""
     
-    
-    
+    array=weights.copy()
+    for i, x in enumerate(array):
+        rand_float=random()
+        if rand_float < mutation_prob:
+            array[i]+=gauss(0,1)
+    return array
     
     
     
