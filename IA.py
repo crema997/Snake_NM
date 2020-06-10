@@ -15,17 +15,11 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Flatten
+from keras.layers import Dense, Conv1D, Flatten
 #18 input neurons
 #16 hidden
 #8 hidden or 16 hidden
 #4 final
-
-
-
-
-
-
 
 class IA:
     
@@ -34,8 +28,8 @@ class IA:
         #create model
         self.model = Sequential()
         #add model layers
-        self.model.add(Conv2D(16, kernel_size=1, activation='relu', input_shape=(18,1,1)))
-        self.model.add(Conv2D(8, kernel_size=1, activation='relu'))
+        self.model.add(Conv1D(16, kernel_size=1, activation='relu', input_shape=(18,1)))
+        self.model.add(Conv1D(8, kernel_size=1, activation='relu'))
         self.model.add(Flatten())
         self.model.add(Dense(4, activation='softmax'))
         
@@ -46,11 +40,11 @@ class IA:
     
         for  x in array:    
             if i==0:
-                for y in x[0][0][0]:
+                for y in x[0][0]:
                     Weights=np.append(Weights,[y], axis=0)
                 
             elif i==2:
-                for y in x[0][0]:
+                for y in x[0]:
                     for z in y:
                         Weights=np.append(Weights,[z], axis=0)
             elif i == 4:
@@ -65,50 +59,33 @@ class IA:
         return Weights
     
     def set_weights_as_nparray(self, weights):
-        i=0
         j=0 #counter of weights
         array=self.model.get_weights()
         
-        for  x in array:    
+        for i,  x in enumerate(array):    
             if i==0:
-                k=0
-                for y in x[0][0][0]:
-                    array[i][0][0][0][k]=weights[j]
+                for k, y in enumerate(x[0][0]):
+                    array[i][0][0][k]=weights[j]
                     j+=1
-                    k+=1
             
             elif i==2:
-                k=0
-                
-                for y in x[0][0]:
-                    l=0
-                    for z in y:
-                        array[i][0][0][k][l]=weights[j]
+                for l, y in enumerate(x[0]):
+                    for m, z in enumerate(y):
+                        array[i][0][l][m]=weights[j]
                         j+=1
-                        l+=1
-                    k+=1
-                    
-            elif i==4:
-                k=0
-               
-                for y in x:
-                    l=0
-                    for z in y:
+        
+            elif i==4:              
+                for k, y in enumerate(x):
+                    for l, z in enumerate(y):
                         array[i][k][l]=weights[j]
-                        l+=1
                         j+=1
-                    k+=1
-                    
+         
             elif i%2==1:
-                k=0
-                
-                for y in x:
+                for k, y in enumerate(x):
                     array[i][k]=weights[j]
-                    k+=1
                     j+=1
          
             
-            i+=1
         self.model.set_weights(array)
         
 
@@ -118,7 +95,7 @@ class IA:
     def set_points(self, points):
          self.Grid.set_points(points)
     
-    def check_direction(self, versor): #TODO
+    def check_direction(self, versor): 
         boolean = True
         body_found= False
         i=1
@@ -135,11 +112,11 @@ class IA:
                         distance_body = i 
                         body_found=True
             i+=1
-        return distance_body, distance_wall
+        return [distance_body, distance_wall]
                 
                 
                 
-    def calculate_distances(self): #TODO
+    def calculate_distances(self):
         """calculate the distance(in x and y) between the head of the snake an the food. 
            Also looks in 8 directions to check if there is a part of the body of the snake or a wall"""
         self.Grid.update_grid()
@@ -150,22 +127,24 @@ class IA:
         distances.append(y_dist)
         
         #versor (1,0)
-        distances.append(self.check_direction([1,0]))
+        distances+=self.check_direction([1,0])
         #versor (1,1)
-        distances.append(self.check_direction([1,1]))
+        distances+=self.check_direction([1,1])
         #versor (0,1)
-        distances.append(self.check_direction([0,1]))
+        distances+=self.check_direction([0,1])
         #versor (-1,1)
-        distances.append(self.check_direction([-1,1]))
+        distances+=self.check_direction([-1,1])
         #versor (-1,0)
-        distances.append(self.check_direction([-1,0]))
+        distances+=self.check_direction([-1,0])
         #versor (-1,-1)
-        distances.append(self.check_direction([-1,-1]))
+        distances+=self.check_direction([-1,-1])
         #versor (0,-1)
-        distances.append(self.check_direction([0,-1]))
+        distances+=self.check_direction([0,-1])
         #versor (1,-1)
-        distances.append(self.check_direction([1,-1]))
-        return distances
+        distances+=self.check_direction([1,-1])
+        
+        distances_np=np.array(distances)
+        return distances_np
     
     def draw(self):
         window=tk.Tk()
@@ -206,7 +185,34 @@ class IA:
         window.bind("<Key>", lambda event: keypress(event, self, c, squares,window))
         window.mainloop()
 
-         
+        
+    def predict(self, data):
+        data=data.reshape(1,18,1)
+        return self.model.predict([data])
+
+    def move_up(self):
+        self.Grid.move_up()
+      
+    def move_down(self):
+        self.Grid.move_down()
+        
+    def move_left(self):
+        self.Grid.move_left()
+
+    def move_right(self):
+        self.Grid.move_right()
+
+    def get_food_pos(self):
+        return self.Grid.get_food_pos()
+    
+    def draw_2(self, canvas, squares):
+        self.Grid.draw(canvas,squares)
+
+
+
+
+
+
 def get_point(Ia):
     return Ia.get_points()
 

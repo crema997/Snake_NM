@@ -58,8 +58,7 @@ class grid(object):
             self.food=food
             self.grid[food.y][food.x]=2
     
-    def update_grid (self):
-        
+    def update_grid (self):        
         for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
                 if y==1:
@@ -72,22 +71,14 @@ class grid(object):
             self.food.set_position(randint(0, self.column, 2))
         
         self.grid[self.food.y][self.food.x]=2    
-            
-     
-            
-     
         
     def collision(self):
-        if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows:
+        if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column-1 or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows-1:
             self.status=False
      
         for a in self.snake.position[1:]:
             if a==self.snake.position[0]:
-                self.status=False
-     
-        
-     
-        
+                self.status=False    
             
     def eat(self):
         if self.food.x == self.snake.position[0][0] and self.food.y == self.snake.position[0][1]:
@@ -106,9 +97,8 @@ class grid(object):
             print(self.moves_left)
             self.collision()
             self.eat()
-        
-
-        
+            self.update_grid()
+                
     def move_down(self):#ok
         if self.moves_left<=0:
             self.status=False
@@ -118,8 +108,8 @@ class grid(object):
             print(self.moves_left)
             self.collision()
             self.eat()
-        
-        
+            self.update_grid()
+                
     def move_left(self):
         if self.moves_left<=0:
             self.status=False
@@ -129,8 +119,7 @@ class grid(object):
             print(self.moves_left)
             self.collision()
             self.eat()
-        
-
+            self.update_grid()
         
     def move_right(self):
         if self.moves_left<=0:
@@ -140,17 +129,17 @@ class grid(object):
             self.moves_left-=1
             print(self.moves_left)
             self.collision()
-            self.eat()    
-  
-            
+            self.eat()
+            self.update_grid()
+              
     def get_points(self):
         return self.points            
             
     def set_points(self, points):
         self.points = points
             
-            
-            
+    def get_food_pos(self):     
+        return self.food.get_position()
             
             
             

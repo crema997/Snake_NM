@@ -37,6 +37,7 @@ def test_get_and_set_weights():
     #print ("\n\n\n\n\n")
     #print (b)
 
+test_get_and_set_weights()
     
 def get_point(Ia):
     return Ia.get_points()
@@ -98,13 +99,14 @@ def test_mutation():
     print(a)
     print(b)
 
-
+def test_distances():
+    seed()
+    ia=IA()
+    print(ia.calculate_distances())
+    ia.draw()
 #%%
 #spazio di prova per test routine
-seed()
-ia=IA()
-print(ia.calculate_distances())
-ia.draw()
+
 #%%
 #test non importanti
 
