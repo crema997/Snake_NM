@@ -94,7 +94,7 @@ class grid(object):
         else:
             self.snake.move_up()
             self.moves_left-=1
-            print(self.moves_left)
+            #print(self.moves_left)
             self.collision()
             self.eat()
             self.update_grid()
@@ -105,7 +105,7 @@ class grid(object):
         else:
             self.snake.move_down()
             self.moves_left-=1
-            print(self.moves_left)
+            #print(self.moves_left)
             self.collision()
             self.eat()
             self.update_grid()
@@ -116,7 +116,7 @@ class grid(object):
         else:
             self.snake.move_left()
             self.moves_left-=1
-            print(self.moves_left)
+            #print(self.moves_left)
             self.collision()
             self.eat()
             self.update_grid()
@@ -127,7 +127,7 @@ class grid(object):
         else:
             self.snake.move_right()
             self.moves_left-=1
-            print(self.moves_left)
+            #print(self.moves_left)
             self.collision()
             self.eat()
             self.update_grid()

@@ -37,9 +37,9 @@ def test_get_and_set_weights():
     #print ("\n\n\n\n\n")
     #print (b)
 
-test_get_and_set_weights()
+#test_get_and_set_weights()
     
-def get_point(Ia):
+def get_points(Ia):
     return Ia.get_points()
 
 def test_ordering():
@@ -62,6 +62,8 @@ def test_ordering():
     print("dopo aver ordinato,  ordine aspettato: 7 5 3 ")
     for x in ia:
         print(x.get_points())
+        
+#test_ordering()
 #test recombination_1
 def test_reco_1():
     a=[0,1,2,3,4,5,6,7,8,9]
@@ -83,6 +85,7 @@ def test_reco_1():
     print ("c[1] equals result 2? expected: True obtained",end=" ")
     print(c1_2)    
 
+test_reco_1()
 
 #test recombination_2
 def test_reco_2():
@@ -107,6 +110,30 @@ def test_distances():
 #%%
 #spazio di prova per test routine
 
+from numpy.random import randint
+
+def test_genetic_algo():
+    ia1=IA()
+    ia2=IA()
+    
+    w1=ia1.get_weights_as_nparray()
+    w2=ia2.get_weights_as_nparray()
+    
+    cut =randint(0, w1.size, 1)
+    print(w1.size)
+    print(w2.size)
+    
+    buff=recombination_1(w1, w2, cut[0])
+    print(len(buff[0]))
+    
+    buff=mutation(buff[0])
+
+    print(len(buff))
+    
+    ia3=IA()
+    ia3.set_weights_as_nparray(buff)
+    
+test_genetic_algo()
 #%%
 #test non importanti
 

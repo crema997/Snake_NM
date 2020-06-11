@@ -213,11 +213,11 @@ class IA:
 
 
 
-def get_point(Ia):
+def get_points(Ia):
     return Ia.get_points()
 
 def order_IA(ia):
-    ia.sort(key=get_point, reverse=True)
+    ia.sort(key=get_points, reverse=True)
     return ia
 
 def recombination_1(array_1, array_2, cut):
@@ -245,6 +245,8 @@ def mutation(weights, mutation_prob=0.01):
     """generate a mutation with a probability of 1% and a mutation that is gaussian with mean 0 and sigma 1"""
     
     array=weights.copy()
+
+    
     for i, x in enumerate(array):
         rand_float=random()
         if rand_float < mutation_prob:
