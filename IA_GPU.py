@@ -58,7 +58,7 @@ def mutation(inp_weights, n_ia, n_weights, rng_states, prob=0.1):
     ty = cuda.blockIdx.x
     if ty<n_ia and tx<n_weights:
         a=xoroshiro128p_uniform_float32(rng_states, cuda.grid(1))
-        print(a)
+        #print(a)
         if a<prob:
             inp_weights[ty][tx]+=(xoroshiro128p_uniform_float32(rng_states, cuda.grid(1))*2-1)
     
@@ -85,6 +85,7 @@ class IA_GPU:
         
         threads_per_block=19
         dt = datetime.now()
+        #print (dt)
         rng_states = create_xoroshiro128p_states(threads_per_block * blocks, seed=dt.microsecond)
         for i, x in enumerate(self.weights_layer_2):
             fill_random[1,threads_per_block](self.weights_layer_2[i], 19, rng_states)
@@ -146,8 +147,11 @@ class IA_GPU:
         # Start the kernel 
         matmul[blockspergrid, threadsperblock](A_global_mem, B_global_mem, C_global_mem) #calculated values of second layer
         C = C_global_mem.copy_to_host()
-
-        
+        #print(C)
+        #print("")
+        #for i in range(16):
+        #    C[i][0]=expit(C[i][0])
+        #print(C)
         
         arr=np.append(C,[[1.]],0)
         A_global_mem = cuda.to_device(self.weights_layer_3)
@@ -157,10 +161,14 @@ class IA_GPU:
         blockspergrid_y = int(math.ceil(arr.shape[1] / threadsperblock[1]))
         blockspergrid = (blockspergrid_x, blockspergrid_y)
         matmul[blockspergrid, threadsperblock](A_global_mem, B_global_mem, C_global_mem) #calculated values of third layer
-    
-        
-    
+   
         C = C_global_mem.copy_to_host()
+        #print(C)
+        #print("")
+        #for i in range(8):
+        #    C[i][0]=expit(C[i][0])
+        #print(C)
+        
         arr=np.append(C,[[1.]],0)
         A_global_mem = cuda.to_device(self.weights_layer_4)
         B_global_mem = cuda.to_device(arr)
@@ -253,27 +261,27 @@ def order_IA(ia):
     ia.sort(key=get_points, reverse=True)
     return ia
 
-def play(ia):   #, moves_done, food_pos):
+def play(ia, moves_done, food_pos):
     #0=up, 1=right, 2=down, 3=left
 
     while ia.grid.status:
-        #food_pos.append(ia.get_food_pos())
+        food_pos.append(ia.get_food_pos())
         distances = ia.calculate_distances()
         distances = np.reshape(distances, (18,1))
         result = ia.predict(distances)
         
         if result[0][0]==0:
             ia.move_up()
-            #moves_done.append(0)
+            moves_done.append(0)
         elif result[0][0]==1:
             ia.move_right()
-            #moves_done.append(1)
+            moves_done.append(1)
         elif result[0][0]==2:
             ia.move_down()
-            #moves_done.append(2)
+            moves_done.append(2)
         elif result[0][0]==3:
             ia.move_left()
-            #moves_done.append(3)
+            moves_done.append(3)
             
 def main():
     tot_ia=1000
@@ -283,21 +291,22 @@ def main():
     for i in range(tot_ia):
         ia[i].fill_layers()
     boolean = True
-    generation=0
+    generation=1
     while (boolean):
         print("Generation:", end=" ")
         print(generation)
         for i, x in enumerate(ia):
-            play(ia[i])    #,moves_done[i],food_pos[i])
-            print(get_points(ia[i]),end=" ")
+            play(ia[i],moves_done[i],food_pos[i])
+            #print(get_points(ia[i]),end=" ")
         
         order_IA(ia)
         
         best_ia=ia[:10]
         boolean=best_ia[0].get_points()<=30
+        print("")
         print ("points",end=" ")
         print(best_ia[0].get_points())
-        new_weights_gpu_mem =  cuda.device_array((1000, 476))
+        new_weights_gpu_mem =  cuda.device_array((tot_ia, 476))
         buff=[]
         for i in range(tot_ia): 
             buff.append(ia[i].get_weights())
@@ -313,10 +322,55 @@ def main():
         for i in range(tot_ia):
             ia[i].set_weights(new_weights[i])
         generation+=1
-main()
+#main()
 
 
 
+
+def main_2():
+    tot_ia=1000
+    food_pos=[[]]*tot_ia
+    moves_done=[[]]*tot_ia
+    ia=[IA_GPU]*tot_ia
+    for i in range(tot_ia):
+        ia[i]=IA_GPU()
+        ia[i].fill_layers()
+    boolean = True
+    generation=1
+
+    print("Generation:", end=" ")
+    print(generation)
+    for i in range(tot_ia):
+        play(ia[i],moves_done[i],food_pos[i])
+        print(get_points(ia[i]),end=" ")
+        
+    order_IA(ia)
+        
+    best_ia=ia[:10]
+    boolean=best_ia[0].get_points()<=30
+    print("")
+    print ("points",end=" ")
+    print(best_ia[0].get_points())
+    new_weights_gpu_mem =  cuda.device_array((tot_ia, 476))
+    buff=[]
+    for i in range(tot_ia): 
+        buff.append(ia[i].get_weights())
+    old_weights=np.array(buff)
+    old_weights_gpu_mem=cuda.to_device(old_weights)
+    dt = datetime.now()
+    rng_states = create_xoroshiro128p_states(1*tot_ia, seed=dt.microsecond)
+    recombination[1,tot_ia](old_weights_gpu_mem, new_weights_gpu_mem, 10, tot_ia, 476, rng_states)
+    rng_states = create_xoroshiro128p_states(476*tot_ia, seed=dt.microsecond)
+    mutation[tot_ia,476](new_weights_gpu_mem, tot_ia, 476, rng_states,0.1)
+        
+    new_weights=new_weights_gpu_mem.copy_to_host()
+    for i in range(tot_ia):
+        ia[i].set_weights(new_weights[i])
+    generation+=1
+    
+    #print(moves_done)
+
+main_2()
 
 
 
