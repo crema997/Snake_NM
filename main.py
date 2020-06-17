@@ -77,18 +77,20 @@ def main():
         
         
 def main2():
-    ia_number=100
+    ia_number=2000
     ia_arr= []
     food_pos=[[]]*ia_number
     moves_done=[[]]*ia_number
     boolean=True
+    generation=0
     for i in range (ia_number):
         ia_arr.append(IA())
         print(i)
     #print(food_pos)
     #print(moves_done)
     while(boolean):
-
+        print("Generation:", end=" ")
+        print(generation)
         for i, x in enumerate(ia_arr):
             play(ia_arr[i],moves_done[i],food_pos[i])
             print(get_points(ia_arr[i]),end=" ")
@@ -113,9 +115,17 @@ def main2():
             new_ia.append(IA())
             new_ia[i].set_weights_as_nparray(buff)
             print(i,end=" ")
+            del w1
+            del w2
+            del buff
+            gc.collect()
         print("\n")  
         ia_arr=new_ia.copy()
+        
+        food_pos.clear()
+        moves_done.clear()
+        food_pos=[[]]*ia_number
+        moves_done=[[]]*ia_number
+        generation+=1
         gc.collect()
-
-
 main2()

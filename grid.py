@@ -140,7 +140,3 @@ class grid(object):
             
     def get_food_pos(self):     
         return self.food.get_position()
-            
-            
-            
-            
