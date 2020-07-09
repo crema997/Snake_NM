@@ -154,4 +154,4 @@ def main():
         #boolean=False
         
     print (all_best_ia)
-#main()
+main()
