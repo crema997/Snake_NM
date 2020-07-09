@@ -8,7 +8,7 @@ class snake(object):
     def __init__(self, Lenght=4):    
         self.lenght=Lenght
         self.position=[[10,10]]
-        self.last_pos=[-1,-1] #indiates the last position of the tail
+        self.last_pos=[-1,-1] #indicates the last position of the tail
         for i in range(0,Lenght-1):
             self.position.append([9-i,10])
    

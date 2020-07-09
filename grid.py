@@ -73,7 +73,7 @@ class grid(object):
         self.grid[self.food.y][self.food.x]=2    
         
     def collision(self):
-        if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column-1 or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows-1:
+        if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows:
             self.status=False
      
         for a in self.snake.position[1:]:
@@ -97,7 +97,8 @@ class grid(object):
             #print(self.moves_left)
             self.collision()
             self.eat()
-            self.update_grid()
+            if self.status == True:
+                self.update_grid()
                 
     def move_down(self):#ok
         if self.moves_left<=0:
@@ -108,7 +109,8 @@ class grid(object):
             #print(self.moves_left)
             self.collision()
             self.eat()
-            self.update_grid()
+            if self.status == True:
+                self.update_grid()
                 
     def move_left(self):
         if self.moves_left<=0:
@@ -119,7 +121,8 @@ class grid(object):
             #print(self.moves_left)
             self.collision()
             self.eat()
-            self.update_grid()
+            if self.status == True:
+                self.update_grid()
         
     def move_right(self):
         if self.moves_left<=0:
@@ -130,7 +133,8 @@ class grid(object):
             #print(self.moves_left)
             self.collision()
             self.eat()
-            self.update_grid()
+            if self.status == True:
+                self.update_grid()
               
     def get_points(self):
         return self.points            
@@ -140,3 +144,10 @@ class grid(object):
             
     def get_food_pos(self):     
         return self.food.get_position()
+
+    def restart(self):
+        self.status=True
+        self.points=0
+        self.moves_left=200
+        self.snake=snake(4)
+        self.food=food(rows=self.rows, column=self.column)
