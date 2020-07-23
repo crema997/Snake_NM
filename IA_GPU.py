@@ -70,13 +70,9 @@ def mutation(inp_weights, n_ia, n_weights, rng_states, prob=0.1):
     ty = cuda.blockIdx.x
     if ty<n_ia and tx<n_weights:
         a=xoroshiro128p_uniform_float32(rng_states, cuda.grid(1))
-        #print(a)
         if a<prob:
-            inp_weights[ty][tx]+=(xoroshiro128p_normal_float32(rng_states, cuda.grid(1))/5.)
-            if inp_weights[ty][tx] < -1:
-                inp_weights[ty][tx] = -1
-            elif inp_weights[ty][tx] > 1:
-                inp_weights[ty][tx] = 1
+            inp_weights[ty][tx]+=(xoroshiro128p_normal_float32(rng_states, cuda.grid(1)))/5.
+
 
 
 class IA_GPU:
@@ -101,7 +97,6 @@ class IA_GPU:
         
         threads_per_block=19
         dt = datetime.now()
-        #print (dt)
         rng_states = create_xoroshiro128p_states(threads_per_block * blocks, seed=dt.microsecond)
         for i, x in enumerate(self.weights_layer_2):
             fill_random[1,threads_per_block](self.weights_layer_2[i], 19, rng_states)
@@ -121,14 +116,11 @@ class IA_GPU:
 
     def get_weights(self):
         w_layer2=np.reshape(self.weights_layer_2,(304))
-        #print(w_layer2)
         w_layer3=np.reshape(self.weights_layer_3,(272))
-        #print(w_layer3)
         w_layer4=np.reshape(self.weights_layer_4,(68))
-        #print(w_layer4)
         return np.concatenate((w_layer2,w_layer3,w_layer4),axis=None)
     
-    def set_weights(self, weights):#weights must be a 1D np array
+    def set_weights(self, weights):
         w_layer2=np.array(weights[:304])
         self.weights_layer_2=np.reshape(w_layer2,(16,19))
         
@@ -140,7 +132,6 @@ class IA_GPU:
       
 
     def predict(self, input_arr):  
-        #print(input_arr)
         arr=np.append(input_arr,[[1.]],0)
         A_global_mem = cuda.to_device(self.weights_layer_2)
         B_global_mem = cuda.to_device(arr)
@@ -152,11 +143,8 @@ class IA_GPU:
         # Start the kernel 
         matmul[blockspergrid, threadsperblock](A_global_mem, B_global_mem, C_global_mem) #calculated values of second layer
         C = C_global_mem.copy_to_host()
-        #print(C)
-        #print("")
         for i in range(16):
             C[i][0]=expit(C[i][0])
-        #print(C)
         
         arr=np.append(C,[[1.]],0)
         A_global_mem = cuda.to_device(self.weights_layer_3)
@@ -168,11 +156,8 @@ class IA_GPU:
         matmul[blockspergrid, threadsperblock](A_global_mem, B_global_mem, C_global_mem) #calculated values of third layer
    
         C = C_global_mem.copy_to_host()
-        #print(C)
-        #print("")
         for i in range(8):
             C[i][0]=expit(C[i][0])
-        #print(C)
         
         arr=np.append(C,[[1.]],0)
         A_global_mem = cuda.to_device(self.weights_layer_4)
@@ -185,30 +170,9 @@ class IA_GPU:
     
         # Copy the result back to the host
         C = C_global_mem.copy_to_host()
-        #print (C)
         C=np.reshape(C,(4))
-        #print (C)
         
         return np.where(C == np.amax(C))
-
-    def check_direction_originale(self, versor): 
-        boolean = True
-        body_found= False
-        i=1
-        distance_body=50
-        distance_wall=50
-        while boolean:
-            pos=[x + i*y for x, y in zip(self.grid.snake.position[0], versor)]
-            if pos[0]<0 or pos[0]>39 or pos[1]<0 or pos[1]>39:
-                distance_wall = i-1
-                boolean=False
-            else:
-                if self.grid.grid [pos[0]] [pos[1]] == 1:
-                    if (not body_found):
-                        distance_body = i 
-                        body_found=True
-            i+=1
-        return [distance_body, distance_wall]
 
     def check_direction(self, versor): 
         boolean = True
@@ -281,6 +245,20 @@ class IA_GPU:
         self.grid.restart()
         self.moves_done=[]
         self.food_pos=[]
+     
+    #set of functions used only for replay (no random generationf of food)
+    def Move_up(self):
+        self.grid.Move_up()
+      
+    def Move_down(self):
+        self.grid.Move_down()
+        
+    def Move_left(self):
+        self.grid.Move_left()
+
+    def Move_right(self):
+        self.grid.Move_right()    
+    
 
 def get_points(Ia):
     return Ia.get_points()    
@@ -333,4 +311,3 @@ def play(ia):
         elif result[0][0]==3:
             ia.move_left()
             ia.moves_done.append(3)
-            

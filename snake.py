@@ -12,11 +12,9 @@ class snake(object):
         for i in range(0,Lenght-1):
             self.position.append([9-i,10])
    
-    def move_down(self):#ok
-        
+    def move_down(self):  
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]
-        
         i=0
         for x in self.position:
             if i==0:
@@ -26,10 +24,8 @@ class snake(object):
                 self.position[i]=prev_position
                 prev_position=buff
             i+=1
-            
-            
-    def move_up(self):#ok
-        
+                        
+    def move_up(self):
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]
         
@@ -43,12 +39,9 @@ class snake(object):
                 prev_position=buff
             i+=1
    
-
     def move_right(self):
-        
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]
-        
         i=0
         for x in self.position:
             if i==0:
@@ -60,7 +53,6 @@ class snake(object):
             i+=1
     
     def move_left(self):
-        
         prev_position=(self.position[0]).copy()
         self.last_pos=self.position[self.lenght-1]
         

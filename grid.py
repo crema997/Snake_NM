@@ -58,7 +58,7 @@ class grid(object):
             self.food=food
             self.grid[food.y][food.x]=2
     
-    def update_grid (self):        
+    def update_grid (self):  
         for i, x in enumerate(self.grid):
             for j, y in enumerate(x):
                 if y==1:
@@ -71,7 +71,7 @@ class grid(object):
             self.food.set_position(randint(0, self.column, 2))
         
         self.grid[self.food.y][self.food.x]=2    
-        
+
     def collision(self):
         if self.snake.position[0][0]<0 or self.snake.position[0][0]>=self.column or self.snake.position[0][1]<0 or self.snake.position[0][1]>=self.rows:
             self.status=False
@@ -87,26 +87,24 @@ class grid(object):
             self.moves_left+=100
             self.snake.position.append(self.snake.last_pos)
             self.food.set_position(randint(0, self.column, 2))
-            
+           
     def move_up(self):#ok
         if self.moves_left<=0:
             self.status=False
         else:
             self.snake.move_up()
             self.moves_left-=1
-            #print(self.moves_left)
             self.collision()
             self.eat()
             if self.status == True:
                 self.update_grid()
                 
-    def move_down(self):#ok
+    def move_down(self):
         if self.moves_left<=0:
             self.status=False
         else:
             self.snake.move_down()
             self.moves_left-=1
-            #print(self.moves_left)
             self.collision()
             self.eat()
             if self.status == True:
@@ -118,7 +116,6 @@ class grid(object):
         else:
             self.snake.move_left()
             self.moves_left-=1
-            #print(self.moves_left)
             self.collision()
             self.eat()
             if self.status == True:
@@ -130,12 +127,11 @@ class grid(object):
         else:
             self.snake.move_right()
             self.moves_left-=1
-            #print(self.moves_left)
             self.collision()
             self.eat()
             if self.status == True:
                 self.update_grid()
-              
+     
     def get_points(self):
         return self.points            
             
@@ -145,9 +141,67 @@ class grid(object):
     def get_food_pos(self):     
         return self.food.get_position()
 
+    def set_food_pos(self, pos):
+        self.food.set_position(pos)
+
     def restart(self):
         self.status=True
         self.points=0
         self.moves_left=200
         self.snake=snake(4)
         self.food=food(rows=self.rows, column=self.column)
+        
+    #Functions created for replay the IA, no random generation of the food
+    def Eat(self):
+        if self.food.x == self.snake.position[0][0] and self.food.y == self.snake.position[0][1]:
+            self.snake.lenght+=1
+            self.points+=1
+            self.moves_left+=100
+            self.snake.position.append(self.snake.last_pos)    
+        
+    def Move_up(self):
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_up()
+            self.moves_left-=1
+            self.collision()
+            self.Eat()
+                
+    def Move_down(self):
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_down()
+            self.moves_left-=1
+            self.collision()
+            self.Eat()
+                
+    def Move_left(self):
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_left()
+            self.moves_left-=1
+            self.collision()
+            self.Eat()
+        
+    def Move_right(self):
+        if self.moves_left<=0:
+            self.status=False
+        else:
+            self.snake.move_right()
+            self.moves_left-=1
+            self.collision()
+            self.Eat()  
+            
+    def Update_grid (self):  
+        for i, x in enumerate(self.grid):
+            for j, y in enumerate(x):
+                if y==1:
+                    self.grid[i][j]=0
+                    
+        for x in self.snake.position:
+            self.grid[x[1]][x[0]]=1            
+        
+        self.grid[self.food.y][self.food.x]=2 
